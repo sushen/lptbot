@@ -2,6 +2,7 @@ import sys
 from flask import Flask, request
 from pprint import pprint
 from pymessenger import Bot
+from utils import wit_response
 
 FB_ACCESS_TOKEN = "EAAfk8UkWEJgBAD2ATwNzKnoXg7B7ox0r9Rx1WQTxxQF0eoqfM1HcRn8KFQd9WzxDXMZCMZBHq2z2ksd1kuJNa4TTAPHLQyB02e0nEf8pgjKEeHd9YVavEK8LNhHPYBKSBJNHOiwqWa8sLGmx4jF36xlr6amjKentjWlybGw3oeRmxhyYIvihhk2kO4HZAgZD"
 
@@ -40,8 +41,17 @@ def webhook():
                     else:
                         messaging_text = 'no text'
 
-                # Echo Bot
-                response = messaging_text
+                # replace Echo Bot to wit ai
+                response = None
+
+                entity, value = wit_response(messaging_text)
+
+                if entity == 'location':
+                    response = "Ok, so you live in {0}. Here are top headlines from {0}".format(str(value))
+
+                if response == None:
+                    response = "Sorry, I didnt understand"
+
                 bot.send_text_message(sender_id, response)
 
 
