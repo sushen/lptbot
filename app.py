@@ -1,3 +1,4 @@
+import sys
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -11,6 +12,13 @@ def verify():
             return "Verification token mismatch", 403
         return request.args["hub.challenge"], 200
     return "Hello world", 200
+
+@app.route('/', methods=['POST'])
+def webhook():
+    data = request.get_json()
+    sys.log(data)
+
+    return "ok", 200
 
 
 if __name__ == "__main__":
